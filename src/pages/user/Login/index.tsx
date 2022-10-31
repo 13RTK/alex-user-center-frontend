@@ -11,7 +11,7 @@ import {
 } from '@ant-design/pro-components';
 import {Alert, Divider, message, Tabs} from 'antd';
 import React, { useState } from 'react';
-import {FormattedMessage, history, Link, SelectLang, useIntl, useModel} from 'umi';
+import {FormattedMessage, history, Link, SelectLang, useModel} from 'umi';
 import styles from './index.less';
 import {SYSTEM_LOGO} from "@/pages/constants";
 
@@ -32,8 +32,6 @@ const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-
-  const intl = useIntl();
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -93,19 +91,13 @@ const Login: React.FC = () => {
           <Tabs activeKey={type} onChange={setType}>
             <Tabs.TabPane
               key="account"
-              tab={intl.formatMessage({
-                id: 'pages.login.accountLogin.tab',
-                defaultMessage: '账户密码登录',
-              })}
+              tab={'账号密码登录'}
             />
           </Tabs>
 
           {status === 'error' && loginType === 'account' && (
             <LoginMessage
-              content={intl.formatMessage({
-                id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误',
-              })}
+              content={'错误的账号和密码'}
             />
           )}
           {type === 'account' && (
@@ -116,10 +108,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.userAccount.placeholder',
-                  defaultMessage: '请输入褪色者ID',
-                })}
+                placeholder={'请输入褪色者ID'}
                 rules={[
                   {
                     required: true,
@@ -138,10 +127,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: '请输入密码',
-                })}
+                placeholder={'请输入密码'}
                 rules={[
                   {
                     required: true,
@@ -181,7 +167,7 @@ const Login: React.FC = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="让指头女巫找回密码" />
+              让指头女巫找回密码
             </a>
           </div>
         </LoginForm>

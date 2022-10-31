@@ -1,21 +1,27 @@
+/**
+ * request 网络请求工具
+ * 更详细的 api 文档: https://github.com/umijs/umi-request
+ */
 import {extend} from 'umi-request';
-import {stringify} from "querystring";
 import {message} from "antd";
 import {history} from "@@/core/history";
+import {stringify} from "querystring";
 
 /**
  * 配置request请求时的默认参数
  */
 const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
-  profix: process.env.NODE_ENV === 'production' ? 'http://user-backend.cn' : undefined,
+  // prefix: process.env.NODE_ENV === 'production' ? 'http://user-backend.code-nav.cn' : undefined
+  prefix: process.env.NODE_ENV === 'production' ? 'http://localhost:8080/api' : undefined
+  // requestType: 'form',
 });
 
 /**
  * 所以请求拦截器
  */
 request.interceptors.request.use((url, options): any => {
-  console.log(`request url = ${url}`)
+  console.log(`do request url = ${url}`)
   return {
     url,
     options: {
@@ -28,7 +34,6 @@ request.interceptors.request.use((url, options): any => {
 /**
  * 所有响应拦截器
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 request.interceptors.response.use(async (response, options): Promise<any> => {
   const res = await response.clone().json();
   if (res.code === 20000) {
@@ -37,16 +42,15 @@ request.interceptors.response.use(async (response, options): Promise<any> => {
   if (res.code === 40100) {
     message.error('请先登录');
     history.replace({
-      pathname: 'user/login',
+      pathname: '/user/login',
       search: stringify({
         redirect: location.pathname,
       }),
     });
   } else {
-    message.error(res.description);
+    message.error(res.description)
   }
-
-  return res;
+  return res.data;
 });
 
 export default request;
